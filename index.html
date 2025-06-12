@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost Story: The Whispering Shadows</title>
+    
+    <!-- External Fonts and Icons (Required) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+
+    <!-- CSS styles are now embedded directly in the HTML -->
+    <style>
+        /* --- General Body and Layout --- */
+        body {
+            margin: 0;
+            font-family: 'Lora', serif;
+            background-color: #000000;
+            /* FIX: Brighter default text color for better contrast */
+            color: #f5f5f5; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            /* FIX: Add a subtle shadow to all text to lift it from the background */
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+        }
+
+        .ebook-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- The E-book Itself --- */
+        .ebook {
+            width: 90vw;
+            max-width: 600px;
+            height: 80vh;
+            max-height: 800px;
+            border: 3px solid #444;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.4);
+            background-image: url('https://www.publicdomainpictures.net/pictures/310000/velka/old-house-in-the-dark-forest.jpg');
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: multiply;
+            background-color: rgba(10, 10, 10, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* --- Page Styling --- */
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 40px 40px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease-in-out, visibility 0.6s;
+            
+            /* FIX: Add a semi-transparent background to the page content itself. */
+            /* This makes text readable without completely hiding the house image. */
+            background-color: rgba(0, 0, 0, 0.6);
+
+            /* FIX: Align text left and start content from the top for natural reading flow. */
+            text-align: left;
+            justify-content: flex-start;
+            align-items: flex-start;
+            overflow-y: auto; /* Allow scrolling if content is too long */
+        }
+
+        .page.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* --- FIX: Override page alignment for specific centered pages (Cover, Back Cover) --- */
+        #page-1, #page-8 {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* --- Custom Logo and Titles --- */
+        .logo {
+            margin-bottom: 20px;
+        }
+
+        .logo .fa-ghost {
+            font-size: 80px;
+            color: #b00000; /* Bloody Red */
+            text-shadow: 0 0 15px #ff4d4d, 0 0 5px #fff;
+            margin-bottom: 10px;
+        }
+
+        .logo h1 {
+            font-family: 'Creepster', cursive;
+            font-size: 4rem;
+            color: #f1f1f1;
+            text-shadow: 3px 3px 0px #b00000;
+            margin: 0;
+            letter-spacing: 2px;
+        }
+
+        .logo h2 {
+            font-family: 'Lora', serif;
+            font-size: 1.5rem;
+            color: #ccc;
+            margin: -10px 0 0 0;
+            font-style: italic;
+        }
+
+        .author {
+            margin-top: 2rem;
+            font-size: 1.2rem;
+            font-style: italic;
+            color: #aaa;
+        }
+
+        .warning {
+            position: absolute;
+            bottom: 30px;
+            color: #ff4d4d;
+            font-weight: bold;
+            border: 1px solid #ff4d4d;
+            padding: 5px 10px;
+        }
+
+        /* --- Chapter & Special Text Styling --- */
+        h3 {
+            font-family: 'Creepster', cursive;
+            font-size: 2.5rem;
+            color: #b00000;
+            text-shadow: 1px 1px 10px rgba(255, 255, 255, 0.2);
+            margin-bottom: 1.5rem;
+            width: 100%; /* Ensure it spans the width */
+            text-align: center; /* Keep titles centered */
+        }
+
+        p {
+            width: 100%; /* Allow paragraph to take available width */
+            max-width: 100%;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .whisper-text, .final-whisper, .scratched-text, .diary-text, .epilogue-quote, .ritual-text, .back-cover-text {
+            width: 100%;
+            text-align: center; /* Center the special text blocks */
+            align-self: center; /* Ensure it centers in the flex container */
+            box-sizing: border-box;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .whisper-text, .final-whisper {
+            font-style: italic;
+            color: #aaa;
+            font-size: 1.3rem;
+            text-shadow: 0 0 5px #ccc;
+        }
+
+        .scratched-text {
+            font-family: 'Creepster', cursive;
+            color: #e0e0e0;
+            font-size: 1.5rem;
+            border: 2px dashed #666;
+            padding: 15px;
+            letter-spacing: 1px;
+            max-width: 80%;
+        }
+
+        .diary-text, .epilogue-quote {
+            font-style: italic;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-left: 3px solid #b00000;
+            text-align: left; /* Quotes look better left-aligned */
+        }
+
+        .ritual-text {
+            font-weight: bold;
+            font-size: 1.4rem;
+            color: #ffc400;
+            text-shadow: 0 0 10px #ffc400;
+        }
+
+        .back-cover-text {
+            font-size: 2rem;
+            font-family: 'Creepster', cursive;
+            color: #b00000;
+        }
+
+        .logo-small .fa-ghost {
+            font-size: 40px;
+            color: #444;
+        }
+
+        /* --- Navigation Controls --- */
+        .navigation {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        button {
+            background-color: #222;
+            color: #eee;
+            border: 1px solid #b00000;
+            padding: 10px 20px;
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        button:hover {
+            background-color: #b00000;
+            color: #fff;
+        }
+
+        button:disabled {
+            background-color: #111;
+            color: #555;
+            border-color: #444;
+            cursor: not-allowed;
+        }
+
+        #page-counter {
+            margin: 0 20px;
+            font-size: 1.1rem;
+            color: #888;
+            min-width: 50px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ebook-container">
+        <div class="ebook">
+            <!-- Page 1: Cover -->
+            <div class="page active" id="page-1">
+                <div class="logo">
+                    <i class="fas fa-ghost"></i>
+                    <h1>Ghost Story</h1>
+                    <h2>The Whispering Shadows</h2>
+                </div>
+                <p class="author">By Prince Yadav</p>
+                <div class="warning">
+                    <p>Warning: Not for the faint of heart.</p>
+                </div>
+            </div>
+
+            <!-- Page 2: Chapter 1 -->
+            <div class="page" id="page-2">
+                <h3>🕯️ Chapter 1: The Forgotten Village</h3>
+                <p>In the remote village of Kaliganj, wrapped in fog and secrets, stood a crumbling mansion known as The Hollow House. For decades, no one dared enter. Locals spoke of whispers in the night, and shadows that moved on their own.</p>
+                <p>When 17-year-old Aryan, an aspiring paranormal writer, visited Kaliganj to collect folklore for his book, he was drawn to The Hollow House. Curiosity consumed him, despite villagers’ warnings. "The house doesn't want visitors," the old priest whispered.</p>
+            </div>
+
+            <!-- Page 3: Chapter 2 -->
+            <div class="page" id="page-3">
+                <h3>🌫️ Chapter 2: The Voice in the Walls</h3>
+                <p>On Aryan's first night inside the mansion, silence hung like a curtain. Then came the whisper — faint and chilling.</p>
+                <p class="whisper-text">"Help me... I'm still here..."</p>
+                <p>Aryan followed the sound into the basement. Dusty portraits lined the walls — one looked just like him. Underneath it, scratched into the wood:</p>
+                <p class="scratched-text">“Trapped. 1893. Save me.”</p>
+            </div>
+
+            <!-- Page 4: Chapter 3 -->
+            <div class="page" id="page-4">
+                <h3>🩸 Chapter 3: The Mirror of Memory</h3>
+                <p>Aryan discovered an old mirror. When he looked into it, he didn’t see himself — he saw a young girl in white, crying in the corner of a burning room.</p>
+                <p>The flames weren’t in the past. Suddenly, the room around him grew hot, and the shadows moved. Aryan broke the mirror. The fire vanished. But now, a black handprint was scorched on the wall behind him.</p>
+            </div>
+
+            <!-- Page 5: Chapter 4 -->
+            <div class="page" id="page-5">
+                <h3>👻 Chapter 4: The Secret Diary</h3>
+                <p>Hidden in the floorboards, Aryan found a diary belonging to Anaya, a girl from 1893 who claimed she was being hunted by "The Shadow Man."</p>
+                <p class="diary-text">“He comes in fog. He feeds on silence. I’m the last. If you see this, please finish what I couldn’t.”</p>
+                <p>Anaya was trapped in the house, cursed. The Shadow fed on souls who entered. Aryan was next.</p>
+            </div>
+            
+            <!-- Page 6: Chapter 5 -->
+            <div class="page" id="page-6">
+                 <h3>🔥 Chapter 5: The Final Ritual</h3>
+                <p>With clues from Anaya’s diary, Aryan performed a ritual at midnight. Candles flickered. The Shadow appeared — tall, faceless, with smoke for skin. It lunged.</p>
+                <p>Aryan shouted Anaya’s final words:</p>
+                <p class="ritual-text">“I give light to the lost, and end the silence forever!”</p>
+                <p>A scream shook the walls. The shadows vanished. And then... silence.</p>
+            </div>
+
+            <!-- Page 7: Epilogue -->
+            <div class="page" id="page-7">
+                <h3>🌄 Epilogue: The Book of Whispers</h3>
+                <p>Aryan escaped. But he was never the same. He published his book, “Ghost Story,” but warned readers:</p>
+                <p class="epilogue-quote">“If you hear a whisper behind you while reading… put the book down.”</p>
+                <p>Some didn’t listen. Some still hear the voice.</p>
+                <p class="final-whisper">"Help me... I'm still here..."</p>
+            </div>
+
+            <!-- Page 8: Back Cover -->
+            <div class="page" id="page-8">
+                <p class="back-cover-text">"Some didn’t listen. Some still hear the voice."</p>
+                 <div class="logo-small">
+                    <i class="fas fa-ghost"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button id="prev-btn" title="Previous Page">&laquo; Prev</button>
+            <span id="page-counter">1 / 8</span>
+            <button id="next-btn" title="Next Page">Next &raquo;</button>
+        </div>
+    </div>
+
+    <!-- JavaScript is now embedded directly in the HTML (No changes needed here) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const pages = document.querySelectorAll('.page');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const pageCounter = document.getElementById('page-counter');
+
+            let currentPageIndex = 0;
+            const totalPages = pages.length;
+
+            function showPage(index) {
+                pages.forEach(page => {
+                    page.classList.remove('active');
+                });
+
+                pages[index].classList.add('active');
+                pageCounter.textContent = `${index + 1} / ${totalPages}`;
+                prevBtn.disabled = (index === 0);
+                nextBtn.disabled = (index === totalPages - 1);
+            }
+
+            nextBtn.addEventListener('click', () => {
+                if (currentPageIndex < totalPages - 1) {
+                    currentPageIndex++;
+                    showPage(currentPageIndex);
+                }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (currentPageIndex > 0) {
+                    currentPageIndex--;
+                    showPage(currentPageIndex);
+                }
+            });
+
+            showPage(currentPageIndex);
+        });
+    </script>
+</body>
+</html>
